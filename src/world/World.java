@@ -1,5 +1,14 @@
 package world;
 
+/*
+ * f = g + h
+ * h = entfernung zum Ziel
+ * g = 10 horizontal/vertikal 14 diagonal
+ * 
+ * immer niedrigstes anliegendes kästchen nehmen!
+ * 
+ * Tutorial: http://www.policyalmanac.org/games/aStarTutorial.htm
+ */
 public class World {
 	public final static int NORTH 	= 1;
 	public final static int EAST 	= 2;
