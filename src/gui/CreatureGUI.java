@@ -3,13 +3,15 @@ package gui;
 import java.util.LinkedList;
 
 import creature.Creature;
+import creature.Enemy;
+import creature.SpeedCreature;
 import processing.core.PApplet;
 import world.Field;
 import world.World;
 
 public class CreatureGUI extends PApplet {
 
-	private Creature c;
+	private LinkedList<Enemy> enemys;
 	private World world;
 	
 	private long pc;
@@ -17,24 +19,74 @@ public class CreatureGUI extends PApplet {
 	private LinkedList<Field> path1;
 	
 	public void setup() {
-		size(400,400);
+		size(625,625);
 		background(255);
 		frameRate(30);
 	
-		this.pc = 0;
-		this.c = new Creature(200, 200);
+		this.pc = 0;		
+		this.world = new World(30, 30);
 		
-		this.world = new World(5, 5);
-		path1 = this.world.aStar(new Field(Field.CONTAIN_SPAWN, 0, 2), new Field(Field.CONTAIN_EXIT, 4, 2));
-	}
-	
-	public void keyPressed() {
-		if(keyCode == 37){ //Links
-			this.c.rotate(90);
-		}else if(keyCode == 39){ //Rechts
-			this.c.rotate(-90);
-		}else if(keyCode == 38) { //Vorwärts
-			this.c.move(10);
+		this.enemys = new LinkedList<>();
+		
+		//Blocks
+		for(int i = 0; i < 30; i++) {
+			this.world.setField(i, 8, Field.CONTAIN_BLOCK);
+			this.world.setField(i, 18, Field.CONTAIN_BLOCK);
+		}
+		
+		this.world.setField(2, 14, Field.CONTAIN_BLOCK);
+		this.world.setField(2, 13, Field.CONTAIN_BLOCK);
+		this.world.setField(2, 15, Field.CONTAIN_BLOCK);
+		this.world.setField(2, 12, Field.CONTAIN_BLOCK);
+		this.world.setField(2, 16, Field.CONTAIN_BLOCK);
+		
+		this.world.setField(4, 14-3, Field.CONTAIN_BLOCK);
+		this.world.setField(4, 13-3, Field.CONTAIN_BLOCK);
+		this.world.setField(4, 15-3, Field.CONTAIN_BLOCK);
+		this.world.setField(4, 12-3, Field.CONTAIN_BLOCK);
+		this.world.setField(4, 16-3, Field.CONTAIN_BLOCK);
+		
+		this.world.setField(6, 14+1, Field.CONTAIN_BLOCK);
+		this.world.setField(6, 13+1, Field.CONTAIN_BLOCK);
+		this.world.setField(6, 15+1, Field.CONTAIN_BLOCK);
+		this.world.setField(6, 12+1, Field.CONTAIN_BLOCK);
+		this.world.setField(6, 16+1, Field.CONTAIN_BLOCK);
+		
+		this.world.setField(8, 14-2, Field.CONTAIN_BLOCK);
+		this.world.setField(8, 13-2, Field.CONTAIN_BLOCK);
+		this.world.setField(8, 15-2, Field.CONTAIN_BLOCK);
+		this.world.setField(8, 12-2, Field.CONTAIN_BLOCK);
+		this.world.setField(8, 16-2, Field.CONTAIN_BLOCK);
+		
+		this.world.setField(10, 14+1, Field.CONTAIN_BLOCK);
+		this.world.setField(10, 13+1, Field.CONTAIN_BLOCK);
+		this.world.setField(10, 15+1, Field.CONTAIN_BLOCK);
+		this.world.setField(10, 12+1, Field.CONTAIN_BLOCK);
+		this.world.setField(10, 16+1, Field.CONTAIN_BLOCK);
+		
+		this.world.setField(12, 14-3, Field.CONTAIN_BLOCK);
+		this.world.setField(12, 13-3, Field.CONTAIN_BLOCK);
+		this.world.setField(12, 15-3, Field.CONTAIN_BLOCK);
+		this.world.setField(12, 12-3, Field.CONTAIN_BLOCK);
+		this.world.setField(12, 16-3, Field.CONTAIN_BLOCK);
+		
+		this.world.setField(14, 14-2, Field.CONTAIN_BLOCK);
+		this.world.setField(14, 13-2, Field.CONTAIN_BLOCK);
+		this.world.setField(14, 15-2, Field.CONTAIN_BLOCK);
+		this.world.setField(14, 12-2, Field.CONTAIN_BLOCK);
+		this.world.setField(14, 16-2, Field.CONTAIN_BLOCK);
+		this.world.setField(14, 17-2, Field.CONTAIN_BLOCK);
+		this.world.setField(14, 18-2, Field.CONTAIN_BLOCK);
+		this.world.setField(14, 19-2, Field.CONTAIN_BLOCK);
+		
+		path1 = this.world.aStar(new Field(Field.CONTAIN_SPAWN, 0, 14), new Field(Field.CONTAIN_EXIT, 29, 14));
+		if((LinkedList<Field>) path1.clone() != null) {
+			enemys.add(new Creature(		0,	14,	(LinkedList<Field>) path1.clone(),	0));
+			enemys.add(new Creature(		0,	14,	(LinkedList<Field>) path1.clone(),	50));
+			enemys.add(new Creature(		0,	14,	(LinkedList<Field>) path1.clone(),	100));
+			enemys.add(new Creature(		0,	14,	(LinkedList<Field>) path1.clone(),	150));
+			enemys.add(new SpeedCreature(	0,	14,	(LinkedList<Field>) path1.clone(),	250));
+			enemys.add(new SpeedCreature(	0,	14,	(LinkedList<Field>) path1.clone(),	275));
 		}
 	}
 	
@@ -54,7 +106,7 @@ public class CreatureGUI extends PApplet {
 				} else {
 					fill(255, 255, 255);
 				}
-				rect(x * 50, y * 50, 50, 50);
+				rect(x * 20, y * 20, 20, 20);
 			}
 		}
 	}
@@ -75,8 +127,13 @@ public class CreatureGUI extends PApplet {
 		
 		//Creature
 		stroke(0,0,0);
-		rect(this.c.getX(), this.c.getY(), 20, 20);	//creature
-		
-		//this.c.move(1);
+		fill(255,0,0);
+		for(Enemy e : enemys) {
+			if(e.getSpawnAt() < this.pc) {
+				rect(e.getAbsX()-5, e.getAbsY()-5, 10, 10);	//creature
+				
+				e.move();
+			}
+		}
 	}
 }
