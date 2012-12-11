@@ -18,8 +18,8 @@ public class AStarGUI extends PApplet {
 		int sizeY = 25;
 
 		world = new World(sizeX, sizeY);
-		world.setField(0, 5, Field.CONTAIN_SPAWN);
-		world.setField(0, 20, Field.CONTAIN_EXIT);
+//		world.setField(0, 5, Field.CONTAIN_SPAWN);
+//		world.setField(0, 20, Field.CONTAIN_EXIT);
 		
 		world.setField(20, 5, Field.CONTAIN_CHECKPOINT);
 		world.setField(20, 20, Field.CONTAIN_CHECKPOINT);

@@ -24,8 +24,8 @@ public class CreatureWorldCombinedGUI extends PApplet {
 	private LinkedList<Tower> towers;
 
 	public void setup() {
-		int sizeX = 25;
-		int sizeY = 25;
+		int sizeX = 50;
+		int sizeY = 50;
 
 		enemys = new LinkedList<>();
 		towers = new LinkedList<>();
@@ -158,7 +158,7 @@ public class CreatureWorldCombinedGUI extends PApplet {
 		drawWorld();
 		pc++;
 		
-//		if(pc%20 == 0) this.addSlowCreature();
+		if(pc%20 == 0) this.addSlowCreature();
 		
 		//Handle Creatures
 		Iterator<Enemy> i2 = enemys.iterator();
@@ -176,8 +176,9 @@ public class CreatureWorldCombinedGUI extends PApplet {
 		while(i1.hasNext()) {
 			Tower t = i1.next();
 			
-			fill(200,0,0,30f);
-			ellipse(t.getAbsX(), t.getAbsY(), t.getRadius()*2, t.getRadius()*2);
+			t.checkRadius(enemys);
+//			fill(200,0,0,30f);
+//			ellipse(t.getAbsX(), t.getAbsY(), t.getRadius()*2, t.getRadius()*2);
 			fill(0,0,0);
 			ellipse(t.getAbsX(), t.getAbsY(), 10, 10);
 		}
