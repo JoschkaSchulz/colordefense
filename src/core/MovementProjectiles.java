@@ -2,13 +2,15 @@ package core;
 
 import java.util.Iterator;
 
+import projectile.Projectile;
+
 import creature.Enemy;
 
-public class MovementEnemys extends Thread{
+public class MovementProjectiles extends Thread {
 	
 	private DefenseCore core;
 	
-	public MovementEnemys(DefenseCore core) {
+	public MovementProjectiles(DefenseCore core) {
 		this.core = core;
 	}
 
@@ -16,13 +18,11 @@ public class MovementEnemys extends Thread{
 		while(true) {			
 			try {	//Versuche alle zu bewegen
 				//Handle Creatures
-				Iterator<Enemy> i2 = core.getEnemys().iterator();
+				Iterator<Projectile> i2 = core.getProjectiles().iterator();
 				while(i2.hasNext()) {
-					Enemy e = i2.next();
+					Projectile p = i2.next();
 					
-					e.move();
-					
-					if(e.reachedTarget()) i2.remove();
+					p.move();
 				}
 			}catch(Exception e) {}
 			

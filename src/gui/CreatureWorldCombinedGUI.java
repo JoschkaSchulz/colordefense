@@ -24,8 +24,8 @@ public class CreatureWorldCombinedGUI extends PApplet {
 	private LinkedList<Tower> towers;
 
 	public void setup() {
-		int sizeX = 50;
-		int sizeY = 50;
+		int sizeX = 25;
+		int sizeY = 25;
 
 		enemys = new LinkedList<>();
 		towers = new LinkedList<>();

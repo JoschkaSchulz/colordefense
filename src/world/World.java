@@ -44,6 +44,26 @@ public class World {
 		return world;
 	}
 	
+	public Field getSpawn() {
+		for(int h = 0; h < world[0].length; h++) {
+			for(int w = 0; w < world.length; w++) {
+				if(world[w][h].getContain() == Field.CONTAIN_SPAWN) return world[w][h];
+			}
+		}
+		
+		return null;
+	}
+	
+	public Field getExit() {
+		for(int h = 0; h < world[0].length; h++) {
+			for(int w = 0; w < world.length; w++) {
+				if(world[w][h].getContain() == Field.CONTAIN_EXIT) return world[w][h];
+			}
+		}
+		
+		return null;
+	}
+	
 	private LinkedList<Field> getAllAround(Field target) {
 		LinkedList<Field> ret = new LinkedList<>();
 		

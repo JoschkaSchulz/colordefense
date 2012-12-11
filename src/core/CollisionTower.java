@@ -14,13 +14,14 @@ public class CollisionTower extends Thread {
 
 	public void run() {
 		while(true) {
-			
-			Iterator<Tower> i1 = core.getTowers().iterator();
-			while(i1.hasNext()) {
-				Tower t = i1.next();
-				
-				t.checkRadius(core.getEnemys());
-			}
+			try {
+				Iterator<Tower> i1 = core.getTowers().iterator();
+				while(i1.hasNext()) {
+					Tower t = i1.next();
+					
+					t.saveNearEnemys(core.getEnemys());
+				}
+			}catch(Exception e) {}
 			
 			try {
 				Thread.sleep(10);

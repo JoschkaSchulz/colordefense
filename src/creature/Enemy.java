@@ -13,7 +13,7 @@ public abstract class Enemy {
 	private LinkedList<LinkedList<Field>> paths;	//List of next paths
 	private int speed;								//Speed of the object
 	private int spawnAt;							//Time to spawn, usefull for waves of mobs
-	
+	private int moveCounter;						//Counter from start
 	
 	public Enemy(int x, int y, LinkedList<Field> path) {
 		this.x = this.calcFromMatrix(x);
@@ -24,6 +24,7 @@ public abstract class Enemy {
 		
 		this.speed = 1;				//Normal speed
 		this.spawnAt = 1;			//Spawn at counter x
+		this.moveCounter = 0;
 	}
 	
 	public Enemy(int x, int y, LinkedList<Field> path, int spawnTimer) {
@@ -35,6 +36,10 @@ public abstract class Enemy {
 		
 		this.speed = 1;						//Normal speed
 		this.spawnAt = spawnTimer;			//Spawn at counter x
+	}
+	
+	public int getMoveCounter() {
+		return this.moveCounter;
 	}
 	
 	public void addPath(LinkedList<Field> addPath) {
@@ -89,8 +94,8 @@ public abstract class Enemy {
 	public void move() {
 //		if(this.next != null) System.out.println("~~~");
 //		if(this.next != null) System.out.println("X: "+this.x+" == "+calcFromMatrix(this.next.getX()));
-//		if(this.next != null) System.out.println("Y: "+this.y+" == "+calcFromMatrix(this.next.getY()));
-		
+//		if(this.next != null) System.out.println("Y: "+this.y+" == "+calcFromMatrix(this.next.getY()));		
+		int move = this.speed;
 		int nextX = this.x;
 		int nextY = this.y;
 		if(this.next != null) {
@@ -113,12 +118,18 @@ public abstract class Enemy {
 //			System.out.println("NEXT");
 		}else if(this.x < nextX) {
 			this.x = (this.x - this.speed > nextX ? nextX : this.x + this.speed);
+			move = (this.x - this.speed > nextX ? nextX : this.speed);
 		}else if(this.x > nextX) {
 			this.x = (this.x - this.speed < nextX ? nextX : this.x - this.speed);
+			move = (this.x - this.speed < nextX ? nextX : this.speed);
 		}else if(this.y < nextY) {
 			this.y = (this.y - this.speed > nextY ? nextY : this.y + this.speed);
+			move = (this.y - this.speed > nextY ? nextY : this.speed);
 		}else if(this.y > nextY) {
 			this.y = (this.y - this.speed < nextY ? nextY : this.y - this.speed);
+			move = (this.y - this.speed < nextY ? nextY : this.speed);
 		}
+		
+		moveCounter += move;
 	}
 }
