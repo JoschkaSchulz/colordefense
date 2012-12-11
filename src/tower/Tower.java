@@ -67,12 +67,13 @@ public abstract class Tower {
 	public LinkedList<Enemy> checkRadius(LinkedList<Enemy> enemys) {
 		LinkedList<Enemy> result = new LinkedList<>();
 		Enemy targetEnemy = null;
-		if(!enemys.isEmpty()) targetEnemy = enemys.getFirst();
+		//if(!enemys.isEmpty()) targetEnemy = enemys.getFirst();
 		
 		for(Enemy e : enemys) {
 			int check = (e.getAbsX() - this.getAbsX())*(e.getAbsX() - this.getAbsX()) + (e.getAbsY() - this.getAbsY())*(e.getAbsY() - this.getAbsY());
 			if(check <= radius*radius) {
 				result.add(e);
+				if(targetEnemy == null) targetEnemy = e;
 				if(e.getMoveCounter() > targetEnemy.getMoveCounter()) targetEnemy = e;
 			}
 		}

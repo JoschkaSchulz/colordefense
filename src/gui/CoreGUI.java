@@ -183,7 +183,7 @@ public class CoreGUI extends PApplet{
 				fill(0,0,255);
 				rect(t.getAbsX()-5, t.getAbsY()-5,10,10);
 				for(Enemy e : t.getNearEnemys()) {
-					if(e.equals(t.getTarget())) stroke(255,0,0);
+					if(t.getTarget() != null && e.equals(t.getTarget())) stroke(255,0,0);
 					else stroke(0,255,0);
 					line(t.getAbsX(), t.getAbsY(), e.getAbsX(), e.getAbsY());
 				}
