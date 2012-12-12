@@ -20,6 +20,9 @@ public class CollisionTower extends Thread {
 					Tower t = i1.next();
 					
 					t.saveNearEnemys(core.getEnemys());
+					
+					//Wenn Tower geladen ist schieﬂe!
+					if(t.load()) t.shoot(core);
 				}
 			}catch(Exception e) {}
 			

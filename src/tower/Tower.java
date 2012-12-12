@@ -2,12 +2,18 @@ package tower;
 
 import java.util.LinkedList;
 
+import core.DefenseCore;
+
+import projectile.Bullet;
+import projectile.Projectile;
+
 import creature.Enemy;
 
 public abstract class Tower {
 	protected int x;
 	protected int y;
 
+	protected float load;
 	protected int scaleField = 20;
 	protected int radius;
 	protected LinkedList<Enemy> nearEnemys;
@@ -17,11 +23,22 @@ public abstract class Tower {
 		this.x = x;
 		this.y = y;
 
-		this.radius = 50;
+		this.radius = 100;
 		this.nearEnemys = new LinkedList<>();
 		this.target = null;
 	}
 
+	public boolean load() {
+		if(load <= 0) {
+			load = 100.0f;
+			return true;
+		}else{
+			load -= 1.0f;
+			return false;
+		}
+		
+	}
+	
 	public void setRadius(int radius) {
 		this.radius = radius;
 	}
@@ -79,34 +96,34 @@ public abstract class Tower {
 		int adx = Math.abs(dx);
 		int ady = Math.abs(dy);
 
-		if (dy == 0 && dx == 0) {
-			return 0;
-		} else if (dy == 0 && dx > 0) {
-			return 0;
-		} else if (dy == 0 && dx < 0) {
-			return 180;
-		} else if (dy > 0 && dx == 0) {
-			return 270;
-		} else if (dy < 0 && dx == 0) {
-			return 90;
-		}
+//		if (dy == 0 && dx == 0) {
+//			return 0;
+//		} else if (dy == 0 && dx > 0) {
+//			return 0;
+//		} else if (dy == 0 && dx < 0) {
+//			return 180;
+//		} else if (dy > 0 && dx == 0) {
+//			return 270;
+//		} else if (dy < 0 && dx == 0) {
+//			return 90;
+//		}
 
 		double rwinkel = Math.atan((double) ady / adx);
 		double dWinkel = 0;
 
-		if (dx > 0 && dy > 0) // 1. Quartal Winkkel von 270° - 359°
-		{
-			dWinkel = 360 - Math.toDegrees(rwinkel);
-		} else if (dx < 0 && dy > 0) // 2. Quartal Winkkel von 180° - 269°
-		{
-			dWinkel = 180 + Math.toDegrees(rwinkel);
-		} else if (dx > 0 && dy < 0) // 3. Quartal Winkkel von 90° - 179°
-		{
-			dWinkel = 180 - Math.toDegrees(rwinkel);
-		} else if (dx < 0 && dy < 0) // 4. Quartal Winkkel von 0° - 89°
-		{
+//		if (dx > 0 && dy > 0) // 1. Quartal Winkkel von 270° - 359°
+//		{
+//			dWinkel = 360 - Math.toDegrees(rwinkel);
+//		} else if (dx < 0 && dy > 0) // 2. Quartal Winkkel von 180° - 269°
+//		{
+//			dWinkel = 180 + Math.toDegrees(rwinkel);
+//		} else if (dx > 0 && dy < 0) // 3. Quartal Winkkel von 90° - 179°
+//		{
+//			dWinkel = 180 - Math.toDegrees(rwinkel);
+//		} else if (dx < 0 && dy < 0) // 4. Quartal Winkkel von 0° - 89°
+//		{
 			dWinkel = Math.toDegrees(rwinkel);
-		}
+//		}
 
 		int iWinkel = (int) dWinkel;
 
@@ -114,10 +131,14 @@ public abstract class Tower {
 			iWinkel = 0;
 		}
 
-		return iWinkel;
+		return iWinkel-180;
 
 	}
 
+	public void shoot(DefenseCore core) {
+		core.getProjectiles().add(new Bullet(this.getAbsX(), this.getAbsY(), this.getAngle(target.getAbsX(), target.getAbsY())));
+	}
+	
 	public LinkedList<Enemy> checkRadius(LinkedList<Enemy> enemys) {
 		LinkedList<Enemy> result = new LinkedList<>();
 		Enemy targetEnemy = null;

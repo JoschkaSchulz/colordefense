@@ -14,6 +14,16 @@ import tower.Tower;
 import world.Field;
 import world.World;
 
+/**
+ * Tower muss ein Thread werden, Projektile müssen Threads werden und ich 
+ * die Gegener müssen eigene Threads werden damit der Render Fehler nicht
+ * mehr gezeigt wird ... -.-
+ * 
+ * also wieder ein haufen Arbeit und eine neue Datenstruktur :D yaaaay -.-
+ * @author Thathalas
+ *
+ */
+
 public class CoreGUI extends PApplet{
 	
 	/*
