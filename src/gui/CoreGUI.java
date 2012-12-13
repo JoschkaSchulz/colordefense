@@ -88,14 +88,18 @@ public class CoreGUI extends PApplet{
 		Field spawn = core.getWorld().getSpawn();
 		Creature c = new Creature(spawn.getX(), spawn.getY(), (LinkedList<Field>) path.clone(), 0, core);
 		c.start();
-		core.getEnemys().add(c);
+		synchronized (core.getEnemys()) {
+			core.getEnemys().add(c);
+		}
 	}
 
 	private void addSpeedCreature() {
 		Field spawn = core.getWorld().getSpawn();
 		SpeedCreature c = new SpeedCreature(spawn.getX(), spawn.getY(), (LinkedList<Field>) path.clone(), 0, core);
 		c.start();
-		core.getEnemys().add(c);
+		synchronized (core.getEnemys()) {
+			core.getEnemys().add(c);
+		}
 	}
 	
 	public void mousePressed() {

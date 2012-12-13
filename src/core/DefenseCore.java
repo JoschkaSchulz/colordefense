@@ -1,5 +1,6 @@
 package core;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 
 import projectile.Projectile;
@@ -63,7 +64,10 @@ public class DefenseCore {
 	 */
 	
 	public void removeEnemy(int x, int y) {
-		for(Enemy e : this.enemys) {
+		Iterator<Enemy> i = this.enemys.iterator();
+		while(i.hasNext()) {
+			Enemy e = i.next();	
+		
 			if(e.getAbsX() == x && e.getAbsY() == y) {
 				e.interrupt();
 				this.enemys.remove(e);

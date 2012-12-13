@@ -51,7 +51,9 @@ public abstract class Enemy extends Thread{
 			
 			this.move();
 			
-			if(this.reachedTarget()) core.removeEnemy(this.getAbsX(), this.getAbsY());
+			synchronized (core.getEnemys()) {
+				if(this.reachedTarget()) core.removeEnemy(this.getAbsX(), this.getAbsY());	
+			}
 			
 			try {
 				Thread.sleep(10);
