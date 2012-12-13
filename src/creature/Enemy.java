@@ -2,9 +2,11 @@ package creature;
 
 import java.util.LinkedList;
 
+import core.DefenseCore;
+
 import world.Field;
 
-public abstract class Enemy {
+public abstract class Enemy extends Thread{
 	protected int scaleField = 20;
 	int x;											//x position of the creature (NOT MATRIX POSITION)
 	int y;											//y position of the creature (NOT MATRIX POSITION)
@@ -14,8 +16,9 @@ public abstract class Enemy {
 	private int speed;								//Speed of the object
 	private int spawnAt;							//Time to spawn, usefull for waves of mobs
 	private int moveCounter;						//Counter from start
+	private DefenseCore core;						//Need Defense core for cd with towers and projectiles
 	
-	public Enemy(int x, int y, LinkedList<Field> path) {
+	public Enemy(int x, int y, LinkedList<Field> path, DefenseCore core) {
 		this.x = this.calcFromMatrix(x);
 		this.y = this.calcFromMatrix(y);
 		
@@ -25,9 +28,11 @@ public abstract class Enemy {
 		this.speed = 1;				//Normal speed
 		this.spawnAt = 1;			//Spawn at counter x
 		this.moveCounter = 0;
+		
+		this.core = core;
 	}
 	
-	public Enemy(int x, int y, LinkedList<Field> path, int spawnTimer) {
+	public Enemy(int x, int y, LinkedList<Field> path, int spawnTimer, DefenseCore core) {
 		this.x = this.calcFromMatrix(x);
 		this.y = this.calcFromMatrix(y);
 		
@@ -36,6 +41,22 @@ public abstract class Enemy {
 		
 		this.speed = 1;						//Normal speed
 		this.spawnAt = spawnTimer;			//Spawn at counter x
+		
+		this.core = core;
+	}
+	
+	public void run() {
+		while(!this.isInterrupted()) {
+			if(this.isInterrupted()) return;
+			
+			this.move();
+			
+			if(this.reachedTarget()) core.removeEnemy(this.getAbsX(), this.getAbsY());
+			
+			try {
+				Thread.sleep(10);
+			}catch(Exception e) {}
+		}
 	}
 	
 	public int getMoveCounter() {

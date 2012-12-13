@@ -20,8 +20,6 @@ public class DefenseCore {
 	private LinkedList<Projectile> projectiles;
 	
 	//Collision Towers Handler
-	private CollisionTower collisionTower;
-	private MovementEnemys movementEnemys;
 	private MovementProjectiles movementProjectiles;
 	
 	public DefenseCore(int width, int height) {
@@ -33,12 +31,6 @@ public class DefenseCore {
 		enemys = new LinkedList<>();
 		towers = new LinkedList<>();
 		projectiles = new LinkedList<>();
-		
-		this.collisionTower = new CollisionTower(this);
-		this.collisionTower.start();
-		
-		this.movementEnemys = new MovementEnemys(this);
-		this.movementEnemys.start();
 		
 		this.movementProjectiles = new MovementProjectiles(this);
 		this.movementProjectiles.start();
@@ -69,6 +61,15 @@ public class DefenseCore {
 	/*
 	 * Enemy
 	 */
+	
+	public void removeEnemy(int x, int y) {
+		for(Enemy e : this.enemys) {
+			if(e.getAbsX() == x && e.getAbsY() == y) {
+				e.interrupt();
+				this.enemys.remove(e);
+			}
+		}
+	}
 	
 	public LinkedList<Enemy> getEnemys() {
 		return this.enemys;

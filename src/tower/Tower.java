@@ -9,7 +9,7 @@ import projectile.Projectile;
 
 import creature.Enemy;
 
-public abstract class Tower {
+public abstract class Tower extends Thread{
 	protected int x;
 	protected int y;
 
@@ -19,15 +19,37 @@ public abstract class Tower {
 	protected LinkedList<Enemy> nearEnemys;
 	protected Enemy target;
 
-	public Tower(int x, int y) {
+	protected DefenseCore core;
+	
+	public Tower(int x, int y, DefenseCore core) {
 		this.x = x;
 		this.y = y;
 
 		this.radius = 100;
 		this.nearEnemys = new LinkedList<>();
 		this.target = null;
+		
+		this.core = core;
 	}
 
+	public void run() {
+		while(!this.isInterrupted()) {
+			this.saveNearEnemys(core.getEnemys());
+			
+			//Wenn Tower geladen ist schieﬂe!
+			if(this.load() && this.target != null) this.shoot(core);
+			
+			if(this.isInterrupted()) return;
+			
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+	
 	public boolean load() {
 		if(load <= 0) {
 			load = 100.0f;

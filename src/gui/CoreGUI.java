@@ -79,19 +79,22 @@ public class CoreGUI extends PApplet{
 	}
 	
 	private void addNormalTower(int x, int y) {
-		NormalTower c = new NormalTower(x, y);
+		NormalTower c = new NormalTower(x, y, core);
+		c.start();
 		core.getTowers().add(c);
 	}
 	
 	private void addCreature() {
 		Field spawn = core.getWorld().getSpawn();
-		Creature c = new Creature(spawn.getX(), spawn.getY(), (LinkedList<Field>) path.clone(), 0);
+		Creature c = new Creature(spawn.getX(), spawn.getY(), (LinkedList<Field>) path.clone(), 0, core);
+		c.start();
 		core.getEnemys().add(c);
 	}
 
 	private void addSpeedCreature() {
 		Field spawn = core.getWorld().getSpawn();
-		SpeedCreature c = new SpeedCreature(spawn.getX(), spawn.getY(), (LinkedList<Field>) path.clone(), 0);
+		SpeedCreature c = new SpeedCreature(spawn.getX(), spawn.getY(), (LinkedList<Field>) path.clone(), 0, core);
+		c.start();
 		core.getEnemys().add(c);
 	}
 	
