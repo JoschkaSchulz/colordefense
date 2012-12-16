@@ -2,6 +2,8 @@ package creature;
 
 import java.util.LinkedList;
 
+import projectile.Projectile;
+
 import core.DefenseCore;
 
 import world.Field;
@@ -18,6 +20,9 @@ public abstract class Enemy extends Thread{
 	private int moveCounter;						//Counter from start
 	private DefenseCore core;						//Need Defense core for cd with towers and projectiles
 	
+	protected int boundsWidth;
+	protected int boundsHeight;
+	
 	public Enemy(int x, int y, LinkedList<Field> path, DefenseCore core) {
 		this.x = this.calcFromMatrix(x);
 		this.y = this.calcFromMatrix(y);
@@ -30,6 +35,8 @@ public abstract class Enemy extends Thread{
 		this.moveCounter = 0;
 		
 		this.core = core;
+		
+		this.setBoundingBox(0, 0);
 	}
 	
 	public Enemy(int x, int y, LinkedList<Field> path, int spawnTimer, DefenseCore core) {
@@ -43,6 +50,8 @@ public abstract class Enemy extends Thread{
 		this.spawnAt = spawnTimer;			//Spawn at counter x
 		
 		this.core = core;
+		
+		this.setBoundingBox(0, 0);
 	}
 	
 	public void run() {
@@ -51,14 +60,37 @@ public abstract class Enemy extends Thread{
 			
 			this.move();
 			
-			synchronized (core.getEnemys()) {
-				if(this.reachedTarget()) core.removeEnemy(this.getAbsX(), this.getAbsY());	
-			}
+			if(this.reachedTarget()) core.removeEnemy(this.getAbsX(), this.getAbsY());	
+			
+			if(this.checkProjectileCollision().size() > 0) core.removeEnemy(this.getAbsX(), this.getAbsY());
 			
 			try {
 				Thread.sleep(10);
 			}catch(Exception e) {}
 		}
+	}
+	
+	public void setBoundingBox(int width, int height) {
+		this.boundsWidth = width;
+		this.boundsHeight = height;
+	}
+	
+	public LinkedList<Projectile> checkProjectileCollision() {
+		//List for projectiles and result
+		LinkedList<Projectile> projectiles = (LinkedList<Projectile>) this.core.getProjectiles().clone();
+		LinkedList<Projectile> result = new LinkedList<>();
+		
+		//calc the bounding box
+		int x = this.getAbsX() - (this.boundsWidth/2);
+		int y = this.getAbsY() - (this.boundsHeight/2);
+		
+		for(Projectile p : projectiles) {
+			if(p.getAbsX() > x && p.getAbsX() < x+boundsWidth && p.getAbsY() > y && p.getAbsY() < x+boundsHeight) {
+				result.add(p);
+			}
+		}
+		
+		return result;
 	}
 	
 	public int getMoveCounter() {

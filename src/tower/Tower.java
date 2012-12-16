@@ -52,10 +52,9 @@ public abstract class Tower extends Thread{
 	
 	public boolean load() {
 		if(load <= 0) {
-			load = 100.0f;
 			return true;
 		}else{
-			load -= 1.0f;
+			load -= 5.0f;
 			return false;
 		}
 		
@@ -118,34 +117,30 @@ public abstract class Tower extends Thread{
 		int adx = Math.abs(dx);
 		int ady = Math.abs(dy);
 
-//		if (dy == 0 && dx == 0) {
-//			return 0;
-//		} else if (dy == 0 && dx > 0) {
-//			return 0;
-//		} else if (dy == 0 && dx < 0) {
-//			return 180;
-//		} else if (dy > 0 && dx == 0) {
-//			return 270;
-//		} else if (dy < 0 && dx == 0) {
-//			return 90;
-//		}
+		if (dy == 0 && dx == 0) {
+			return 0;
+		} else if (dy == 0 && dx > 0) {
+			return 0;
+		} else if (dy == 0 && dx < 0) {
+			return 180;
+		} else if (dy > 0 && dx == 0) {
+			return 270;
+		} else if (dy < 0 && dx == 0) {
+			return 90;
+		}
 
 		double rwinkel = Math.atan((double) ady / adx);
 		double dWinkel = 0;
 
-//		if (dx > 0 && dy > 0) // 1. Quartal Winkkel von 270° - 359°
-//		{
-//			dWinkel = 360 - Math.toDegrees(rwinkel);
-//		} else if (dx < 0 && dy > 0) // 2. Quartal Winkkel von 180° - 269°
-//		{
-//			dWinkel = 180 + Math.toDegrees(rwinkel);
-//		} else if (dx > 0 && dy < 0) // 3. Quartal Winkkel von 90° - 179°
-//		{
-//			dWinkel = 180 - Math.toDegrees(rwinkel);
-//		} else if (dx < 0 && dy < 0) // 4. Quartal Winkkel von 0° - 89°
-//		{
+		if (dx > 0 && dy > 0) { // 1. Quartal Winkkel von 270° - 359°
+			dWinkel = 180 + Math.toDegrees(rwinkel);
+		} else if (dx < 0 && dy > 0) { // 2. Quartal Winkkel von 180° - 269°
+			dWinkel = 360 - Math.toDegrees(rwinkel);
+		} else if (dx > 0 && dy < 0) { // 3. Quartal Winkkel von 90° - 179
+			dWinkel = 180 - Math.toDegrees(rwinkel);
+		} else if (dx < 0 && dy < 0) { // 4. Quartal Winkkel von 0° - 89°
 			dWinkel = Math.toDegrees(rwinkel);
-//		}
+		}
 
 		int iWinkel = (int) dWinkel;
 
@@ -158,6 +153,7 @@ public abstract class Tower extends Thread{
 	}
 
 	public void shoot(DefenseCore core) {
+		this.load = 100.0f;
 		core.getProjectiles().add(new Bullet(this.getAbsX(), this.getAbsY(), this.getAngle(target.getAbsX(), target.getAbsY())));
 	}
 	

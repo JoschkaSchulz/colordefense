@@ -15,9 +15,13 @@ public abstract class Projectile {
 		this.direction = direction;
 	}
 	
+	public void setSpeed(float speed) {
+		this.speed = speed;
+	}
+	
 	public void move() {
-		x += Math.cos(direction)*speed;
-		y += Math.sin(direction)*speed;
+		x += Math.cos(Math.toRadians(direction))*speed;
+		y += Math.sin(Math.toRadians(direction))*speed;
 	}
 	
 	public float getAbsX() {

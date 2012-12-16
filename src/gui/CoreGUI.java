@@ -87,6 +87,7 @@ public class CoreGUI extends PApplet{
 	private void addCreature() {
 		Field spawn = core.getWorld().getSpawn();
 		Creature c = new Creature(spawn.getX(), spawn.getY(), (LinkedList<Field>) path.clone(), 0, core);
+		c.setBoundingBox(10, 10);
 		c.start();
 		synchronized (core.getEnemys()) {
 			core.getEnemys().add(c);
