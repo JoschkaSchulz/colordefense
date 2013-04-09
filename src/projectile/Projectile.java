@@ -15,6 +15,12 @@ public abstract class Projectile {
 		this.direction = direction;
 	}
 	
+	public boolean equals(Projectile o) {
+		if(this == o) return true;
+		if(x == o.x && y == o.y && speed == o.speed && direction == o.direction) return true;
+		return false;
+	}
+	
 	public void setSpeed(float speed) {
 		this.speed = speed;
 	}

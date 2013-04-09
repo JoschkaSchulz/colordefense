@@ -2,6 +2,7 @@ package core;
 
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.concurrent.Semaphore;
 
 import projectile.Projectile;
 
@@ -23,6 +24,10 @@ public class DefenseCore {
 	//Collision Towers Handler
 	private MovementProjectiles movementProjectiles;
 	
+	//Semaphore
+	Semaphore enemySemaphore;
+	Semaphore enemyBackupSemaphore;
+	
 	public DefenseCore(int width, int height) {
 		this.world = new World(width, height);
 		
@@ -32,6 +37,9 @@ public class DefenseCore {
 		enemys = new LinkedList<>();
 		towers = new LinkedList<>();
 		projectiles = new LinkedList<>();
+		
+		enemySemaphore = new Semaphore(1);
+		enemyBackupSemaphore = new Semaphore(1);
 		
 		this.movementProjectiles = new MovementProjectiles(this);
 		this.movementProjectiles.start();
@@ -64,19 +72,48 @@ public class DefenseCore {
 	 */
 	
 	public void removeEnemy(int x, int y) {
-		Iterator<Enemy> i = this.enemys.iterator();
-		while(i.hasNext()) {
-			Enemy e = i.next();	
-		
-			if(e.getAbsX() == x && e.getAbsY() == y) {
-				e.interrupt();
-				this.enemys.remove(e);
-			}
+		try {
+			enemySemaphore.acquire();
+			//enemyBackupSemaphore.acquire();
+		} catch (InterruptedException e1) {
+			//e1.printStackTrace();
 		}
+		Iterator<Enemy> i = this.enemys.iterator();
+		Enemy enemy = null;
+		while(i.hasNext()) {
+			try {
+				Enemy e = i.next();
+				
+				if(e.getAbsX() == x && e.getAbsY() == y) {
+					enemy = e;
+				}
+			}catch(Exception e) {
+				e.printStackTrace();
+			}	
+		}
+		
+		if(enemy != null) {
+			this.enemys.remove(enemy);
+			enemy.interrupt();
+			System.out.println("Lösche Enemy!");	
+			
+		}
+		//enemyBackupSemaphore.release();
+		enemySemaphore.release();
+	}
+	
+	public void addEnemy(Enemy e) {
+		try {
+			enemySemaphore.acquire();
+		} catch (InterruptedException e1) {
+			//e1.printStackTrace();
+		}
+		this.enemys.add(e);
+		enemySemaphore.release();
 	}
 	
 	public LinkedList<Enemy> getEnemys() {
-		return this.enemys;
+		return (LinkedList<Enemy>) this.enemys.clone();	
 	}
 	
 	/*
@@ -84,7 +121,11 @@ public class DefenseCore {
 	 */
 	
 	public LinkedList<Projectile> getProjectiles() {
-		return this.projectiles;
+		return this.projectiles;	
+	}
+	
+	public void removeProjectile(Projectile p) {
+		this.projectiles.remove(p);	
 	}
 
 }

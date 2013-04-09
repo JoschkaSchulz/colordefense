@@ -1,5 +1,6 @@
 package creature;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 
 import projectile.Projectile;
@@ -62,7 +63,15 @@ public abstract class Enemy extends Thread{
 			
 			if(this.reachedTarget()) core.removeEnemy(this.getAbsX(), this.getAbsY());	
 			
-			if(this.checkProjectileCollision().size() > 0) core.removeEnemy(this.getAbsX(), this.getAbsY());
+			//Muss alle projektile erfassen!
+			LinkedList<Projectile> p = this.checkProjectileCollision();
+			dmgProjectiles(p);
+			if(p.size() > 0) {
+				//dmg Enemy
+				core.removeEnemy(this.getAbsX(), this.getAbsY());
+				//dmg Projectile
+				this.dmgProjectiles(p);
+			}
 			
 			try {
 				Thread.sleep(10);
@@ -73,6 +82,13 @@ public abstract class Enemy extends Thread{
 	public void setBoundingBox(int width, int height) {
 		this.boundsWidth = width;
 		this.boundsHeight = height;
+	}
+	
+	public void dmgProjectiles(LinkedList<Projectile> p) {
+		Iterator<Projectile> iter = p.iterator();
+		while(iter.hasNext()) {
+			core.removeProjectile(iter.next());
+		}
 	}
 	
 	public LinkedList<Projectile> checkProjectileCollision() {
